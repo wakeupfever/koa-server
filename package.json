@@ -1,0 +1,16 @@
+{
+  "name": "123456",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "heiner": "^4.4.7",
+    "monk": "^6.0.6"
+  }
+}
