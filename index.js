@@ -1,7 +1,6 @@
 
 const heiner = require('heiner');
-console.log(heiner)
-heiner(__dirname, {
+heiner(__dirname, {   
     configDir: '/config',
 }).then(function (app) {
     console.log('项目启动成功：http://localhost:' + app.config.port)

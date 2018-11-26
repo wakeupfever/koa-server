@@ -75,7 +75,8 @@ module.exports = {
             uuidv1: 'uuid/v1',
             uuidv4: 'uuid/v4',
             uuidv5: 'uuid/v5',
-            lodash: 'lodash'
+            lodash: 'lodash',
+            mongoose: 'mongoose'
         }
 
     },
@@ -167,7 +168,7 @@ module.exports = {
         // 中间件配置
         options: {
             mongoDB: {
-                url: 'localhost/blog'
+                url: '118.24.248.213/blog'
             }
         }
     },

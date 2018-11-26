@@ -6,7 +6,8 @@ module.exports = function(options, app) {
   return async function(ctx, next) {
     ctx.mongoDB = {
       _db: db,
-      article: db.get('article')
+      article: db.get('article'),
+      tabs: db.get('tabs')
     }
     return next()
   }

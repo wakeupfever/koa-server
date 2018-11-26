@@ -12,5 +12,8 @@
     "ejs": "^2.6.1",
     "heiner": "^4.4.7",
     "monk": "^6.0.6"
+  },
+  "devDependencies": {
+    "mongoose": "^5.3.13"
   }
 }
