@@ -54,10 +54,12 @@ module.exports = app => class extends app.Controller {
       return ctx.body = ctx.helper.util.initData('', '-')
     }
     const params = Object.assign({}, data)
+    if (params.a_lable) {
+      params.a_lable = ctx.helper.mongoose.Types.ObjectId(params.a_lable)
+    }
     const result = await ctx.mongoDB.article.findOneAndUpdate({
       _id: data._id
     }, {$set: params});
-    console.log(result)
     !!result ? (ctx.body = ctx.helper.util.initData(result, 1)) : (ctx.body = ctx.helper.util.initData(result, 0)) // 成功或者失败
   }
   async delArticle(ctx) {
@@ -65,5 +67,8 @@ module.exports = app => class extends app.Controller {
     if (!data._id) {
       return ctx.body = ctx.helper.util.initData('', '-')
     }
+    const id = data._id
+    const result = await ctx.mongoDB.article.remove({_id: id})
+    !!result ? (ctx.body = ctx.helper.util.initData(result, 1)) : (ctx.body = ctx.helper.util.initData(result, 0)) // 成功或者失败
   }
 }

@@ -7,7 +7,7 @@ module.exports = function(options, app) {
     ctx.mongoDB = {
       _db: db,
       article: db.get('article'),
-      tabs: db.get('tabs')
+      tab: db.get('tabs')
     }
     return next()
   }
