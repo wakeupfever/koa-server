@@ -17,5 +17,23 @@ module.exports = {
       list: data,
       msg: states[status],
     }
+  }, 
+  createDate: (time = false) =>{
+    const date = new Date()
+    const y = date.getFullYear() 
+    let m = date.getMonth() + 1
+    m = m < 10 ? ('0' + m) : m
+    let d = date.getDate()
+    d = d < 10 ? ('0' + d) : d
+    if (time) {
+      let h = date.getHours();
+      let minute = date.getMinutes();
+      let second = date.getSeconds();
+      h = h < 10 ? ('0' + h) : h;
+      minute = minute < 10 ? ('0' + minute) : minute;  
+      second = second < 10 ? ('0' + second) : second;
+      return h + '' + minute + second
+    } 
+    return y + '' + m + d
   }
 }

@@ -12,17 +12,17 @@
 module.exports = {
     // 监听端口
     port: 3001,
-
+    
+    origin: 'http://www.onefour.top',
     // DEBUG
-    debug: true,
+    debug: false,
 
     // Cookie 加密的KEY 默认随机
     keys: ['cookie-key'],
 
     logger: {
         dir: '/logs',
-        template: '[${time_local}] "${request}" ${status} ${request_time}ms ${logs}'
-        // template: '{${concurrency}} ${remote_addr} ${remote_user} [${time_local}] "${request}" ${status} ${body_bytes_sent} ${request_time}ms "${http_referer}" "${http_user_agent}" ${logs}'
+        template: '{${concurrency}} ${remote_addr} ${remote_user} [${time_local}] "${request}" ${status} ${body_bytes_sent} ${request_time}ms "${http_referer}" "${http_user_agent}" ${logs}'
     },
     
     // Session 配置
@@ -76,7 +76,10 @@ module.exports = {
             uuidv4: 'uuid/v4',
             uuidv5: 'uuid/v5',
             lodash: 'lodash',
-            mongoose: 'mongoose'
+            mongoose: 'mongoose',
+            moment: 'moment',
+            path: 'path',
+            fs: 'fs'
         }
 
     },
