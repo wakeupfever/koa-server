@@ -1,5 +1,9 @@
 module.exports = async function(router, controller, app) {
   router.use('/', async function (ctx, next) {
+    ctx.set('Access-Control-Allow-Origin', ctx.headers.origin);
+    ctx.set('Access-Control-Allow-Methods', 'GET,POST');
+    ctx.set('Access-Control-Allow-Credentials', true);
+    ctx.set('Access-Control-Allow-Headers', 'content-type');
     await next()
   })
   router.post('/getArticle', controller.article.getArticle) // 文章方法
