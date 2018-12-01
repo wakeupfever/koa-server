@@ -1,33 +1,40 @@
 module.exports = app => class extends app.Controller {
   async getArticle (ctx) {
-    const result = await ctx.mongoDB.article.find()
-    // const result = await ctx.mongoDB.article.aggregate([
-    //   {
-    //     $lookup: { // 左连接
-    //       from: "tabs", // 关联到tabs表
-    //       localField: "a_lable", // article 表关联的字段
-    //       foreignField: "_id", // tabs 表关联的字段
-    //       as: "article_docs"
-    //     }
-    //   },
-    //   {
-    //     $unwind: "$article_docs"
-    //   },
-    //   {
-    //     $addFields: {  name: "$article_docs.a_lable" }
-    //   },
-    //   {
-    //     $project: {
-    //       'a_code': 1,
-    //       '_id': 1,
-    //       'a_title': 1,
-    //       'a_content': 1,
-    //       'a_time': 1,
-    //       'a_state': 1,
-    //       'a_lable': 1,
-    //     }
-    //   }
-    // ])
+    const result = await ctx.mongoDB.article.aggregate([
+      {
+        $lookup: { // 左连接
+          from: "tabs", // 关联到tabs表
+          localField: "a_lable", // article 表关联的字段
+          foreignField: "_id", // tabs 表关联的字段
+          as: "article_docs" // 聚合的字段集合
+        }
+      },
+      { $unwind: "$article_docs" }, // 拆分article_docs字段集合
+      {
+        $addFields: { a_lable: "$article_docs.t_name" } // 提到顶层
+      },
+      { 
+        $match: // 模糊匹配的字段集合
+          {
+            $or: [
+              { a_lable : {$regex: "5bfd3e21ce6ddd0a3c1ab2c0"} },
+              // { a_title : {$regex: ""} },
+            ]
+          }
+      },
+      {
+        $project: { // 要显示的字段集
+          'a_code': 1,
+          '_id': 1,
+          'a_title': 1,
+          'a_content': 1,
+          'a_time': 1,
+          'a_state': 1,
+          'a_lable': 1,
+          't_name': 1,
+        }
+      }
+    ])
     
     ctx.body = ctx.helper.util.initData(result, 1);
   }
