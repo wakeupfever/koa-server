@@ -1,5 +1,9 @@
 module.exports = app => class extends app.Controller {
   async getArticle (ctx) {
+    const data = ctx.request.body
+    data.page > 0 ? data.page = data.page - 1 : data.page
+    console.log(data)
+    console.log(data.a_lable ? ctx.helper.mongoose.Types.ObjectId(data.a_lable) : '')
     const result = await ctx.mongoDB.article.aggregate([
       {
         $lookup: { // 左连接
@@ -11,31 +15,28 @@ module.exports = app => class extends app.Controller {
       },
       { $unwind: "$article_docs" }, // 拆分article_docs字段集合
       {
-        $addFields: { a_lable: "$article_docs.t_name" } // 提到顶层
+        $addFields: { t_name: "$article_docs.t_name" } // 提到顶层
       },
       { 
         $match: // 模糊匹配的字段集合
           {
-            $or: [
-              { a_lable : {$regex: "5bfd3e21ce6ddd0a3c1ab2c0"} },
-              // { a_title : {$regex: ""} },
-            ]
-          }
+            $and: [
+              // { a_lable: data.a_lable && ctx.helper.mongoose.Types.ObjectId(data.a_lable)},
+              { t_name: {$regex: data.t_name || ''}},
+              { a_title: {$regex: data.a_title || ''} },
+              { a_state: {$regex: data.a_state || ''} },
+            ],
+          },
       },
+      { $sort: { _id : -1 } }, // 根据id升序
+      { $skip: data.page * data.size >=0 ? data.page * data.size : 0 },
+      { $limit: data.size ? Number.parseInt(data.size) : 10 },
       {
         $project: { // 要显示的字段集
-          'a_code': 1,
-          '_id': 1,
-          'a_title': 1,
-          'a_content': 1,
-          'a_time': 1,
-          'a_state': 1,
-          'a_lable': 1,
-          't_name': 1,
+          'article_docs': 0
         }
       }
     ])
-    
     ctx.body = ctx.helper.util.initData(result, 1);
   }
   async addArticle (ctx) {
@@ -51,6 +52,7 @@ module.exports = app => class extends app.Controller {
       a_state: data.a_state,
       a_lable: ctx.helper.mongoose.Types.ObjectId(data.a_lable),
     })
+    console.log(result)
     let state = 1
     result._id ? state = 1 : state = 0;
     ctx.body = ctx.helper.util.initData(result, state);
