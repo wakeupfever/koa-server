@@ -2,8 +2,9 @@ module.exports = app => class extends app.Controller {
   async getArticle (ctx) {
     const data = ctx.request.body
     data.page > 0 ? data.page = data.page - 1 : data.page
-    console.log(data)
-    console.log(data.a_lable ? ctx.helper.mongoose.Types.ObjectId(data.a_lable) : '')
+    let date = data.a_time && new Date(data.a_time);
+    const firstDay = data.a_time ? new Date(date.getFullYear(), date.getMonth(), 1) : '';
+    const lastDay = data.a_time ? new Date(date.getFullYear(), date.getMonth() + 1, 0) : '';
     const result = await ctx.mongoDB.article.aggregate([
       {
         $lookup: { // 左连接
@@ -18,13 +19,13 @@ module.exports = app => class extends app.Controller {
         $addFields: { t_name: "$article_docs.t_name" } // 提到顶层
       },
       { 
-        $match: // 模糊匹配的字段集合
-          {
+        $match: { // 模糊匹配的字段集合
             $and: [
               // { a_lable: data.a_lable && ctx.helper.mongoose.Types.ObjectId(data.a_lable)},
               { t_name: {$regex: data.t_name || ''}},
               { a_title: {$regex: data.a_title || ''} },
               { a_state: {$regex: data.a_state || ''} },
+              { a_time: {'$gte': firstDay ? new Date(firstDay) : new Date('1970-01-01'), '$lt': lastDay ? new Date(lastDay) : new Date('2100-12-01')} },
             ],
           },
       },
@@ -35,8 +36,10 @@ module.exports = app => class extends app.Controller {
         $project: { // 要显示的字段集
           'article_docs': 0
         }
-      }
-    ])
+      },
+    ]).pretty()
+    // const total = await ctx.mongoDB.article.count()
+    // console.log(total)
     ctx.body = ctx.helper.util.initData(result, 1);
   }
   async addArticle (ctx) {
