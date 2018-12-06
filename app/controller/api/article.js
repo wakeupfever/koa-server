@@ -32,6 +32,7 @@ module.exports = app => class extends app.Controller {
       { $sort: { _id : -1 } }, // 根据id升序
       { $skip: data.page * data.size >=0 ? data.page * data.size : 0 },
       { $limit: data.size ? Number.parseInt(data.size) : 10 },
+      
       {
         $project: { // 要显示的字段集
           'article_docs': 0
