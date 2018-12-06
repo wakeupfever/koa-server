@@ -8,7 +8,7 @@ module.exports = function(options, app) {
       _db: db,
       article: db.get('article'),
       tab: db.get('tabs'),
-      score: db.get('score')
+      score: db.get('score'),
     }
     return next()
   }
