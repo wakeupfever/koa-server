@@ -23,24 +23,23 @@ module.exports = app => class extends app.Controller {
             $and: [
               // { a_lable: data.a_lable && ctx.helper.mongoose.Types.ObjectId(data.a_lable)},
               { t_name: {$regex: data.t_name || ''}},
+              { a_state: '1' || '2' || '3' || '4'},
               { a_title: {$regex: data.a_title || ''} },
               { a_state: {$regex: data.a_state || ''} },
               { a_time: {'$gte': firstDay ? new Date(firstDay) : new Date('1970-01-01'), '$lt': lastDay ? new Date(lastDay) : new Date('2100-12-01')} },
-            ],
+            ]
           },
       },
       { $sort: { _id : -1 } }, // 根据id升序
-      { $skip: data.page * data.size >=0 ? data.page * data.size : 0 },
-      { $limit: data.size ? Number.parseInt(data.size) : 10 },
+      // { $skip: data.page * data.size >=0 ? data.page * data.size : 0 },
+      // { $limit: data.size ? Number.parseInt(data.size) : 10 },
       {
         $project: { // 要显示的字段集
           'article_docs': 0
         }
       },
     ])
-    const total = result.length
-    const final = ctx.helper.util.initData(result, 1, total);
-    ctx.body = final
+    ctx.body = ctx.helper.util.initData(result, 1);
   }
   async addArticle (ctx) {
     const data = ctx.request.body
@@ -80,7 +79,8 @@ module.exports = app => class extends app.Controller {
       return ctx.body = ctx.helper.util.initData('', '-')
     }
     const id = data._id
-    const result = await ctx.mongoDB.article.remove({_id: id})
+    const state = {a_state: 0}
+    const result = await ctx.mongoDB.article.findOneAndUpdate({_id: id}, {$set, state})
     !!result ? (ctx.body = ctx.helper.util.initData(result, 1)) : (ctx.body = ctx.helper.util.initData(result, 0)) // 成功或者失败
   }
 }
