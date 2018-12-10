@@ -11,11 +11,12 @@ const states = {
   0: 'no!' // 失败
 }
 module.exports = {
-  initData: (data = [], status = '1') => {
+  initData: (data = [], status = '1', total = undefined) => {
     return {
       code: options[status],
       list: data,
-      msg: states[status],
+      total: total,
+      msg: states[status]
     }
   }, 
   createDate: (time = false) =>{

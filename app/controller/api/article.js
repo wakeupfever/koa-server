@@ -32,16 +32,15 @@ module.exports = app => class extends app.Controller {
       { $sort: { _id : -1 } }, // 根据id升序
       { $skip: data.page * data.size >=0 ? data.page * data.size : 0 },
       { $limit: data.size ? Number.parseInt(data.size) : 10 },
-      
       {
         $project: { // 要显示的字段集
           'article_docs': 0
         }
       },
-    ]).pretty()
-    // const total = await ctx.mongoDB.article.count()
-    // console.log(total)
-    ctx.body = ctx.helper.util.initData(result, 1);
+    ])
+    const total = result.length
+    const final = ctx.helper.util.initData(result, 1, total);
+    ctx.body = final
   }
   async addArticle (ctx) {
     const data = ctx.request.body
