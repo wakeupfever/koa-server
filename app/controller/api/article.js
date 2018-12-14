@@ -54,7 +54,6 @@ module.exports = app => class extends app.Controller {
       a_state: data.a_state,
       a_lable: ctx.helper.mongoose.Types.ObjectId(data.a_lable),
     })
-    console.log(result)
     let state = 1
     result._id ? state = 1 : state = 0;
     ctx.body = ctx.helper.util.initData(result, state);
