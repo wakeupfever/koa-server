@@ -37,12 +37,14 @@ module.exports = app => class extends app.Controller {
   }
   async delTab(ctx) {
     const data = ctx.request.body
-    if (!data._id || data._id.length < 24) {
+    if (!data._id || !data.t_state) {
       return ctx.body = ctx.helper.util.initData('', '-')
     }
-    const result = await ctx.mongoDB.tab.findOneAndDelete({
-      _id: data._id
-    });
+    const id = data._id
+    const state = {t_state: data.t_state} 
+    const result = await ctx.mongoDB.tab.findOneAndUpdate({
+      _id: id
+    }, {$set: state});
     !!result ? (ctx.body = ctx.helper.util.initData(result, 1)) : (ctx.body = ctx.helper.util.initData(result, 0)) // 成功或者失败
   }
 }
