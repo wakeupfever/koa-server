@@ -23,7 +23,7 @@ module.exports = app => class extends app.Controller {
             $and: [
               // { a_lable: data.a_lable && ctx.helper.mongoose.Types.ObjectId(data.a_lable)},
               { t_name: {$regex: data.t_name || ''}},
-              { a_state: '1' || '2' || '3' || '4'},
+              // { a_state: '1' || '2' || '3' || '4'},
               { a_title: {$regex: data.a_title || ''} },
               { a_state: {$regex: data.a_state || ''} },
               { a_time: {'$gte': firstDay ? new Date(firstDay) : new Date('1970-01-01'), '$lt': lastDay ? new Date(lastDay) : new Date('2100-12-01')} },
@@ -74,12 +74,14 @@ module.exports = app => class extends app.Controller {
   }
   async delArticle(ctx) {
     const data = ctx.request.body
-    if (!data._id) {
+    if (!data._id || !data.a_state) {
       return ctx.body = ctx.helper.util.initData('', '-')
     }
     const id = data._id
-    const state = {a_state: 0}
-    const result = await ctx.mongoDB.article.findOneAndUpdate({_id: id}, {$set, state})
+    const state = {a_state: data.a_state}
+    const result = await ctx.mongoDB.article.findOneAndUpdate({
+      _id: id
+    }, {$set: state})
     !!result ? (ctx.body = ctx.helper.util.initData(result, 1)) : (ctx.body = ctx.helper.util.initData(result, 0)) // 成功或者失败
   }
 }
