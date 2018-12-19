@@ -1,6 +1,6 @@
 module.exports = app => class extends app.Controller {
   async getTab (ctx) {
-    const result = await ctx.mongoDB.tab.find()
+    const result = await ctx.mongoDB.tab.find({}, {sort: {_id: -1}})
     ctx.body = ctx.helper.util.initData(result, 1);
   }
   async addTab(ctx) {
@@ -14,7 +14,9 @@ module.exports = app => class extends app.Controller {
     let result = ''
     if (findResult == null) {
       result = await ctx.mongoDB.tab.insert({
-        t_name: data.t_name
+        t_name: data.t_name,
+        t_state: '3',
+        t_time: new Date()
       })
       result._id ? (ctx.body = ctx.helper.util.initData(result, 1)) : (ctx.body = ctx.helper.util.initData(result, 0)) // 成功或者失败
     } else {
