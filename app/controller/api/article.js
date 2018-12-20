@@ -5,6 +5,14 @@ module.exports = app => class extends app.Controller {
     let date = data.a_time && new Date(data.a_time);
     const firstDay = data.a_time ? new Date(date.getFullYear(), date.getMonth(), 1) : '';
     const lastDay = data.a_time ? new Date(date.getFullYear(), date.getMonth() + 1, 0) : '';
+    let macthList = [
+      { t_name: {$regex: data.t_name || ''}},
+      // { a_state: '1' || '2' || '3' || '4'},
+      { a_title: {$regex: data.a_title || ''} },
+      { a_state: {$regex: data.a_state || ''} },
+      { a_time: {'$gte': firstDay ? new Date(firstDay) : new Date('1970-01-01'), '$lt': lastDay ? new Date(lastDay) : new Date('2100-12-01')} },
+    ]
+    data._id && macthList.push({_id: ctx.helper.mongoose.Types.ObjectId(data._id)})
     const result = await ctx.mongoDB.article.aggregate([
       {
         $lookup: { // 左连接
@@ -20,14 +28,7 @@ module.exports = app => class extends app.Controller {
       },
       { 
         $match: { // 模糊匹配的字段集合
-            $and: [
-              // { a_lable: data.a_lable && ctx.helper.mongoose.Types.ObjectId(data.a_lable)},
-              { t_name: {$regex: data.t_name || ''}},
-              // { a_state: '1' || '2' || '3' || '4'},
-              { a_title: {$regex: data.a_title || ''} },
-              { a_state: {$regex: data.a_state || ''} },
-              { a_time: {'$gte': firstDay ? new Date(firstDay) : new Date('1970-01-01'), '$lt': lastDay ? new Date(lastDay) : new Date('2100-12-01')} },
-            ]
+            $and: macthList
           },
       },
       { $sort: { _id : -1 } }, // 根据id升序
