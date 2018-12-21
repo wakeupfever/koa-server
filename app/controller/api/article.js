@@ -50,7 +50,7 @@ module.exports = app => class extends app.Controller {
     const result = await ctx.mongoDB.article.insert({
       a_title: data.a_title,
       a_content: data.a_content,
-      a_time: data.a_time,
+      a_time: new Date(data.a_time),
       a_code: data.a_code,
       a_state: data.a_state,
       a_lable: ctx.helper.mongoose.Types.ObjectId(data.a_lable),
@@ -68,6 +68,7 @@ module.exports = app => class extends app.Controller {
     if (params.a_lable) {
       params.a_lable = ctx.helper.mongoose.Types.ObjectId(params.a_lable)
     }
+    params.a_time && (params.a_time = new Date(params.a_time))
     const result = await ctx.mongoDB.article.findOneAndUpdate({
       _id: data._id
     }, {$set: params});
