@@ -50,7 +50,7 @@ module.exports = app => class extends app.Controller {
     const result = await ctx.mongoDB.article.insert({
       a_title: data.a_title,
       a_content: data.a_content,
-      a_time: new Date(data.a_time),
+      a_time: new Date(new Date().setHours(new Date().getHours() + 8)),
       a_code: data.a_code,
       a_state: data.a_state,
       a_lable: ctx.helper.mongoose.Types.ObjectId(data.a_lable),
@@ -64,7 +64,7 @@ module.exports = app => class extends app.Controller {
     if (!data._id) {
       return ctx.body = ctx.helper.util.initData('', '-')
     }
-    const params = Object.assign({}, data)
+    let params = Object.assign({}, data)
     if (params.a_lable) {
       params.a_lable = ctx.helper.mongoose.Types.ObjectId(params.a_lable)
     }

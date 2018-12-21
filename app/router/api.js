@@ -16,5 +16,10 @@ module.exports = async function(router, controller, app) {
   router.post('/updataTab', controller.tab.updataTab)
   router.post('/delTab', controller.tab.delTab)
 
+  router.post('/getLinkman', controller.linkman.getLinkman) // 友情链接
+  router.post('/addLinkman', controller.linkman.addLinkman) // 友情链接
+  router.post('/updataLinkman', controller.linkman.updataLinkman) // 友情链接
+  router.post('/delLinkman', controller.linkman.delLinkman) // 友情链接
+
   router.post('/setUpload', controller.fileUpload.setUpload) // 图片上传方法
 }
