@@ -22,4 +22,6 @@ module.exports = async function(router, controller, app) {
   router.post('/delLinkman', controller.linkman.delLinkman) // 友情链接
 
   router.post('/setUpload', controller.fileUpload.setUpload) // 图片上传方法
+
+  router.post('/getImg', controller.imgs.getImg) // 获取随机图片地址
 }

@@ -79,7 +79,8 @@ module.exports = {
             mongoose: 'mongoose',
             moment: 'moment',
             path: 'path',
-            fs: 'fs'
+            fs: 'fs',
+            axios: 'axios'
         }
 
     },

@@ -10,9 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "ejs": "^2.6.1",
     "fs": "0.0.1-security",
     "heiner": "^4.4.7",
+    "http": "^0.0.0",
     "moment": "^2.22.2",
     "monk": "^6.0.6"
   },
